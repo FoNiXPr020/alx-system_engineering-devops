@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Display message Ctrl+c word "I hate the kill command"
 # Display message before exit "Y U no love me?!"
-echo $$ > /var/run/mypid.pid
-trap 'echo I hate the kill command; rm /var/run/mypid.pid; exit' SIGTERM
+echo $$ > /var/run/myscript.pid
+trap 'echo I hate the kill command; rm /var/run/myscript.pid; exit' SIGTERM
 trap 'echo Y U no love me?!' SIGINT
-trap 'rm /var/run/mypid.pid; exit' SIGQUIT
+trap 'rm /var/run/myscript.pid; exit' SIGQUIT
 
 while true; do
 	echo To infinity and beyond
