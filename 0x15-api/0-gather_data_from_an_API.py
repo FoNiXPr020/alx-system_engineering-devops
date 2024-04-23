@@ -1,37 +1,79 @@
 #!/usr/bin/python3
-# Write a Python script that, using this REST API, for a given
-# employee ID, returns information about his/her Todo list progress.
-
+""" module doc """
 import requests
 import sys
 
 
+def main():
+    """ def com """
+    id = sys.argv[1]
+    url = f'https://jsonplaceholder.typicode.com/'
+    users = f'users?id={id}'
+    todos = f'todos?userId={id}'
+    done = f'{todos}&completed=true'
+    notDone = f'{todos}&completed=false'
+    userData = requests.get(f'{url}{users}').json()
+    Name = userData[0].get("name")
+    todosData = requests.get(f'{url}{todos}').json()
+    todosDone = requests.get(f'{url}{done}').json()
+    doneN = len(todosDone)
+    totalN = len(todosData)
+    print(f'Employee {Name} is done with tasks({doneN}/{totalN}):')
+    for task in todosDone:
+        print("\t "+task.get("title"))
+
+
 if __name__ == "__main__":
-    # Check if the script is provided with an employee ID as a command-line argument
-    if len(sys.argv) != 2:
-        sys.exit(1)
+    main()
 
-    employee_ID = sys.argv[1]
-    jsonplaceholder = 'https://jsonplaceholder.typicode.com/users'
-    url = f'{jsonplaceholder}/{employee_ID}'
+"""
 
-    # Make a GET request to the API
-    response = requests.get(url)
+Employee *NAME* is done with tasks(*DONE*/*TOTAL*):
+     *TITLE*
+     *TITLE*
+     *TITLE*
 
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        employee_name = response.json().get('name')
-        Todourl = f'{url}/todos'
-        res = requests.get(Todourl)
-        tasks = res.json()
 
-        # Filter completed tasks
-        done_tasks = [task for task in tasks if task.get('completed')]
+https://jsonplaceholder.typicode.com/users?id=1
+{
+  "id": 1,
+  "name": "Leanne Graham",
+  "username": "Bret",
+  "email": "Sincere@april.biz",
+  "address": {
+    "street": "Kulas Light",
+    "suite": "Apt. 556",
+    "city": "Gwenborough",
+    "zipcode": "92998-3874",
+    "geo": {
+      "lat": "-37.3159",
+      "lng": "81.1496"
+    }
+  },
+  "phone": "1-770-736-8031 x56442",
+  "website": "hildegard.org",
+  "company": {
+    "name": "Romaguera-Crona",
+    "catchPhrase": "Multi-layered client-server neural-net",
+    "bs": "harness real-time e-markets"
+  }
+}
+https://jsonplaceholder.typicode.com/todos?userId=5
+[
+  {
+    "userId": 1,
+    "id": 1,
+    "title": "delectus aut autem",
+    "completed": false
+  },
+  {
+    "userId": 1,
+    "id": 2,
+    "title": "quis ut nam facilis et officia qui",
+    "completed": false
+  },
+  ]
 
-        # Display the employee TODO list progress
-        print("Employee {} is done with tasks({}/{}):".format(employee_name, len(done_tasks), len(tasks)))
-        for task in done_tasks:
-            print("\t{}".format(task.get('title')))
-    else:
-        # Display an error message if the request was not successful
-        print(f"Error: Unable to fetch data. Status code: {response.status_code}")
+https://jsonplaceholder.typicode.com/todos?userId=5&completed=true
+https://jsonplaceholder.typicode.com/todos?userId=5&completed=false
+  """
