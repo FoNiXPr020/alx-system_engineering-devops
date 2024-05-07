@@ -3,12 +3,11 @@
 import requests
 
 
-def count_subscribers(subreddit_name):
+def number_of_subscribers(subreddit):
     """Retrieve the number of subscribers for a subreddit."""
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit_name)
+    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
     response = requests.get(url, headers={'User-Agent': 'os:0x16.api.advanced:v1.0'})
     if response.status_code != 200:
         return 0
-    subreddit_data = response.json()['data']
-    return subreddit_data['subscribers']
-
+    data = response.json()['data']
+    return data['subscribers']
