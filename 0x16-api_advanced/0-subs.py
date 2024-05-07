@@ -4,7 +4,7 @@ this doc for module
 """
 import requests
 
-headers = {"User-Agent": "MyCustomUserAgent/1.0"}
+headers = {"User-Agent": "Chrome/1.0/AppleWebKit/537.36"}
 
 
 def number_of_subscribers(subreddit):
