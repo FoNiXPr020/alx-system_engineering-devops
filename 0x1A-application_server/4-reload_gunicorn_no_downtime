@@ -1,14 +1,23 @@
 #!/usr/bin/env bash
-# Check if Gunicorn is running
+# Gracefully reloading Gunicorn.
 
-if pgrep -x "gunicorn" > /dev/null
-then
-    #echo "Reloading Gunicorn gracefully..."
-    
-    # Find the process ID of Gunicorn
-    gunicorn_pid=$(pgrep -x "gunicorn")
-    
-    # Send a HUP signal to the Gunicorn master process
-    kill -HUP "$gunicorn_pid"
- 
+# Find Gunicorn process IDs
+
+GUNICORN_PIDs=$(pgrep -f 'gunicorn --bind')
+
+if [ -z "$GUNICORN_PIDs" ]; then
+    echo "No Gunicorn processes found."
 fi
+
+# Stop old workers gracefully
+echo "Stopping old workers gracefully..."
+
+for pid in $GUNICORN_PIDs; do
+    kill -HUP "$pid"
+done
+
+# Wait for old workers to finish processing
+echo "Waiting for old workers to finish processing..."
+
+sleep 5
+echo "Guincorn has Gracefully reloaded"
