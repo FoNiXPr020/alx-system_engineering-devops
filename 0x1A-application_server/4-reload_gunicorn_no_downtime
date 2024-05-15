@@ -1,4 +1,15 @@
-#!/usr/bin/env bash
-# Gracefully reload Gunicorn
+#!/bin/bash
 
-pgrep gunicorn | xargs -I {} kill -HUP {}
+# Check if Gunicorn is running
+if pgrep -x "gunicorn" > /dev/null
+then
+    echo "Gracefully reloading Gunicorn..."
+    # Get the PID of Gunicorn
+    pid=$(pgrep -x "gunicorn")
+    # Send a HUP signal to Gunicorn to gracefully reload
+    kill -HUP $pid
+    echo "Gunicorn reloaded."
+else
+    echo "Gunicorn is not running."
+fi
+
